@@ -20,9 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Wrapper from "@/app/comps/Wrapper";
-import Header from "@/app/comps/Header";
-import Snippet from "@/app/comps/Snippet";
+import Wrapper from "@/app/components/Wrapper";
+import Header from "@/app/components/Header";
+import Snippet from "@/app/components/Snippet";
+
 
 function WebsitePage() {
   const { website } = useParams();
@@ -49,8 +50,8 @@ function WebsitePage() {
         .eq("website_name", website)
         .eq("user_id", user.id);
       // if not go to the dashboard if yeas send other request to get the views
-      data.length == 0
-        ? router.push("/dashboard")
+      data?.length == 0
+        ? router.push("/dashboard") 
         : setTimeout(() => {
           fetchViews();
         }, 500);
@@ -89,7 +90,7 @@ function WebsitePage() {
           ])
           : await Promise.all([
             supabase.from("page_views").select().eq("domain", website),
-            supabase.from("visits").select().eq("domain", website),
+            supabase.from("visits").select().eq("website_domain", website),
             supabase.from("events").select().eq("website_id", website),
           ]);
 
@@ -106,7 +107,7 @@ function WebsitePage() {
       setCustomEvents(customEventsData);
       // grouping the customEvent by name
       setGroupedCustomEvents(
-        customEventsData.reduce((acc, event) => {
+        customEventsData?.reduce((acc, event) => {
           acc[event.event_name] = (acc[event.event_name] || 0) + 1;
           return acc;
         }, {})
@@ -126,7 +127,7 @@ function WebsitePage() {
     } else if (number >= 1000) {
       return (number / 1000).toFixed(1) + "K";
     } else {
-      return number.toString();
+      return number?.toString();
     }
   };
 
@@ -134,9 +135,9 @@ function WebsitePage() {
   function groupPageViews(pageViews) {
     const groupedPageViews = {};
 
-    pageViews.forEach(({ page }) => {
+    pageViews && pageViews?.forEach(({ page }) => {
       // Extract the path from the page URL by removing the protocol and hostname
-      const path = page.replace(/^(?:\/\/|[^/]+)*\//, "");
+      const path = page?.replace(/^(?:\/\/|[^/]+)*\//, "");
 
       // Increment the visit count for the page path
       groupedPageViews[path] = (groupedPageViews[path] || 0) + 1;
@@ -151,7 +152,7 @@ function WebsitePage() {
   function groupPageSources(visits) {
     const groupedPageSources = {};
 
-    visits.forEach(({ source }) => {
+    visits && visits?.forEach(({ source }) => {
       groupedPageSources[source] = (groupedPageSources[source] || 0) + 1;
     });
 
@@ -283,7 +284,7 @@ function WebsitePage() {
                       TOTAL VISITS
                     </p>
                     <p className="py-12 text-3xl lg:text-4xl font-bold bg-[#050505]">
-                      {abbreviateNumber(totalVisits.length)}
+                      {abbreviateNumber(totalVisits?.length)}
                     </p>
                   </div>
                   <div className="bg-black border-white/5 border text-white text-center">
@@ -334,9 +335,9 @@ function WebsitePage() {
                           /{pageSource.source}
                         </p>
                         <p className="text-white/70 font-light">
-                          <p className="">
+                          <span className="">
                             {abbreviateNumber(pageSource.visits)}
-                          </p>
+                          </span>
                         </p>
                       </div>
                     ))}
@@ -398,8 +399,7 @@ function WebsitePage() {
                     </button>
                   )}
                   <div className="flex flex-col bg-black z-40 h-full w-full">
-                    {customEvents
-                      .filter((item) =>
+                    {customEvents?.filter((item) =>
                         activeCustomEventTab
                           ? item.event_name == activeCustomEventTab
                           : item
