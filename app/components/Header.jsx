@@ -15,7 +15,6 @@ import {
   useParams,
   usePathname,
   useRouter,
-  useSearchParams,
 } from "next/navigation";
 import {
   Dialog,

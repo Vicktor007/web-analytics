@@ -1,11 +1,12 @@
 "use client"
 
+import { supabase } from "@/config/Supabase_Client";
 import Logo from "../components/Logo";
 import Wrapper from "../components/Wrapper";
 
 const { default: useUser } = require("@/hooks/useUser");
 const { useRouter } = require("next/navigation");
-const { useState } = require("react")
+const { useState, useEffect } = require("react")
 
 function OnBoardingPage(){
     const  [website, setWebsite] = useState("");
@@ -17,16 +18,33 @@ function OnBoardingPage(){
 
   
 
-        const addWebsite = async () => {
-            if (website.trim() == "" || loading) return;
+        // const addWebsite = async () => {
+        //     if (website.trim() == "" || loading) return;
+        //     setLoading(true);
+        //     const { data, error } = await supabase
+        //       .from("websites")
+        //       .insert([{ website_name: website.trim(), user_id: user.id }])
+        //       .select();
+        //     setLoading(false);
+        //     setStep(2);
+        //   };
+
+        const addWebsite = async ()=> {
+          if (website.trim() == "" || loading) return;
             setLoading(true);
-            const { data, error } = await supabase
-              .from("websites")
-              .insert([{ website_name: website.trim(), user_id: user.id }])
-              .select();
-            setLoading(false);
+          const { error } = await supabase
+    .from("websites")
+    .insert([{ website_name: website.trim(), user_id: user.id }]);
+     setLoading(false);
             setStep(2);
-          };
+if (error) {
+    console.error("Insert error:", error);
+    setError("Failed to add website.");
+    return;
+}
+
+        }
+
           const checkDomainAddedBefore = async () => {
             let fetchedWebites = [];
             const { data: websites, error } = await supabase
@@ -98,12 +116,12 @@ function OnBoardingPage(){
                     <span className="w-full lg:w-[50%]">
                       <textarea
                         type="text"
-                        className="input text-white/20 cursor-pointer"
+                        className="input text-white/45 cursor-pointer"
                         disabled
                         value={`<script defer data-domain="${website}"
                         src="https://monitoryour.website/tracking-script.js"></script>`}
                       />
-                      <p className="text-xs text-white/20 pt-2 font-light">
+                      <p className="text-xs text-white/45 pt-2 font-light">
                         Paste this snippet in the{" "}
                         <b className="text-red-600">{"<head>"}</b> of your website.
                       </p>

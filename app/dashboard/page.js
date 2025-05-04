@@ -14,23 +14,24 @@ function DashboardPage(){
     const [websites, setWebsites] = useState([]);
     const router = useRouter();
 
-    const fetchWebsites = async () => {
-        const { data, error } = await supabase
-          .from("websites")
-          .select()
-          .eq("user_id", user?.id)
-          .order("created_at", { ascending: false });
-        if (data) setWebsites(data);
-        if (error) console.error(error);
-      };
+    
       useEffect(() => {
         if (!user || !supabase) return;
+        const fetchWebsites = async () => {
+          const { data, error } = await supabase
+            .from("websites")
+            .select()
+            .eq("user_id", user?.id)
+            .order("created_at", { ascending: false });
+          if (data) setWebsites(data);
+          if (error) console.error(error);
+        };
         fetchWebsites();
-      }, [user, supabase]);
+      }, [user]);
       useEffect(() => {
         if (!user) return;
         if (user == "no user") router.push("/signin");
-      }, [user]);
+      }, [user, router]);
       return (
         <Wrapper>
           <Header />

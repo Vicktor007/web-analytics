@@ -9,6 +9,7 @@ function useUser(){
     const catchUser = async () => {
         const {
             data: {user}
+            
         } = await supabase.auth.getUser();
         setCurrentUser(user ?? "no user");
     };
