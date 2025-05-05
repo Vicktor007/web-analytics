@@ -5,6 +5,10 @@
     var scriptElement = document.currentScript
     var dataDomain = scriptElement.getAttribute("data-domain")
 
+    let queryString = location.search;
+    const params = new URLSearchParams(queryString);
+    var source = params.get("utm");
+
     var endpoint = `${process.env.NEXT_PUBLIC_URL}/api/track`
 
     function generateSessionId() {
