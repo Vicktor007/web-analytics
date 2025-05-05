@@ -12,7 +12,7 @@ export const corsHeaders = {
   }
 
   export async function POST(request) {
-    const response = await req.json();
+    const response = await request.json();
     const {domain, url, event, source} = response;
 
     if(url.includes(domain))
@@ -31,9 +31,9 @@ export const corsHeaders = {
         .select();
     }
 
-    if (event = "pageview"){
+    if (event == "pageview"){
         await supabase.from("page_views").insert([{domain, page_visited: url}]);
     }
 
-    return NextResponse.json({res}, {headers: corsHeaders});
+    return NextResponse.json({response}, {headers: corsHeaders});
   }

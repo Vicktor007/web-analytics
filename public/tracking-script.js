@@ -7,9 +7,11 @@
 
     let queryString = location.search;
     const params = new URLSearchParams(queryString);
-    var source = params.get("utm");
+    // var source = params.get("utm");
+    var source = params.get("utm_source") || params.get("utm") || params.get("source") || document.referrer || "unknown";
 
-    var endpoint = `${process.env.NEXT_PUBLIC_URL}/api/track`
+
+    var endpoint = `${window.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/track`;
 
     function generateSessionId() {
         return "session-" + Math.random().toString(36).substring(2,9)

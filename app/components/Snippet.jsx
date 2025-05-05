@@ -18,7 +18,7 @@ src="https://monitoryour.website/tracking-script.js"/>
     <Tabs defaultValue="Js/React" className="w-full space-y-5">
       <TabsList
         className="w-full bg-black rounded-none space-x-5
-                         bg-white/5 items-center justify-center flex"
+                         items-center justify-center flex"
       >
         <TabsTrigger value="Js/React" className="rounded-none">
           Js/React
