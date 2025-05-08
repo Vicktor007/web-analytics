@@ -3,6 +3,7 @@
 import { supabase } from "@/config/Supabase_Client";
 import Logo from "../components/Logo";
 import Wrapper from "../components/Wrapper";
+import Header from "../components/Header";
 
 const { default: useUser } = require("@/hooks/useUser");
 const { useRouter } = require("next/navigation");
@@ -76,8 +77,12 @@ if (error) {
           }, [website]);
         
           return (
+            <>
+            <Header/>
             <Wrapper>
+              
               <Logo size="lg" />
+              
               <div
                 className="items-center justify-center p-12
               flex flex-col w-full z-0 border-y
@@ -136,6 +141,7 @@ if (error) {
                 )}
               </div>
             </Wrapper>
+            </>
           );
         }
     

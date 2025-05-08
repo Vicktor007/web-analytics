@@ -23,6 +23,7 @@ import {
 import Wrapper from "@/app/components/Wrapper";
 import Header from "@/app/components/Header";
 import Snippet from "@/app/components/Snippet";
+import ApiSnipet from "@/app/components/api-snippet";
 
 
 function WebsitePage() {
@@ -85,13 +86,13 @@ function WebsitePage() {
             supabase
               .from("events")
               .select()
-              .eq("website_id", website)
+              .eq("website_domain", website)
               .filter("created_at", "gte", ThatTimeAgo.toISOString()),
           ])
           : await Promise.all([
             supabase.from("page_views").select().eq("domain", website),
             supabase.from("visits").select().eq("website_domain", website),
-            supabase.from("events").select().eq("website_id", website),
+            supabase.from("events").select().eq("website_domain", website),
           ]);
 
       // Extract data from responses
@@ -269,7 +270,7 @@ function WebsitePage() {
               defaultValue="general"
               className="w-full items-center justify-center flex flex-col"
             >
-              <TabsList className="w-full bg-transparent mb-4 items-start justify-start flex">
+              <TabsList className="w-full text-white bg-transparent mb-4 items-start justify-start flex">
                 <TabsTrigger value="general">general</TabsTrigger>
                 <TabsTrigger value="custom Events">custom Events</TabsTrigger>
               </TabsList>
@@ -344,9 +345,9 @@ function WebsitePage() {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent className="w-full" value="custom Events">
+              <TabsContent className="w-full text-white" value="custom Events">
                 {/* grid of customEvents */}
-                {groupedCustomEvents && (
+                {groupedCustomEvents > 0 ? (
                   <Carousel className="w-full px-4">
                     <CarouselContent>
                       {Object.entries(groupedCustomEvents).map(
@@ -384,7 +385,24 @@ function WebsitePage() {
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                )}
+                ) : (<div
+                  className="w-full items-center justify-center flex
+                 flex-col space-y-6 z-40 relative min-h-screen px-4"
+                >
+                  <div
+                    className="z-40 w-full lg:w-2/3 bg-black border border-white/5 py-12 px-8 
+                items-center justify-center flex flex-col text-white space-y-4 relative"
+                  >
+                    <p className="bg-green-600 rounded-full p-4 animate-pulse" />
+                    <p className="animate-pulse">Listening for events</p>
+                    <button className="button" onClick={() => window.location.reload()}>
+                      refresh
+                    </button>
+                    <div className="w-full md:w-3/4 z-40 pb-6 border border-white/5 mt-12s">
+                      <ApiSnipet />
+                    </div>
+                  </div>
+                </div>)}
                 {/* display events with messages */}
                 <div
                   className="items-center justify-center bg-black mt-12
